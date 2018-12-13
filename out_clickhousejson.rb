@@ -86,8 +86,9 @@ module Fluent
             req.body = chunk.read
             http = Net::HTTP.new(uri.hostname, uri.port)
             resp = http.request(req)
+
             if resp.code != "200"
-        	    log.warn "Clickhouse responded: #{resp.body}"
+        	    raise "Clickhouse responded: #{resp.body}"
             end
         end
     end
