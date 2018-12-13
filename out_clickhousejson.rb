@@ -1,12 +1,15 @@
-require 'fluent/output'
+require 'fluent/plugin/output'
 require 'fluent/config/error'
 require 'net/http'
 require 'date'
 require 'yajl'
 
 module Fluent
-    class ClickhouseOutputJSON < BufferedOutput
+  module Plugin
+    class ClickhousejsonOutput < Fluent::Plugin::Output
         Fluent::Plugin.register_output("clickhousejson", self)
+
+        helpers :compat_parameters
 
         DEFAULT_TIMEKEY = 60 * 60 * 24
 
@@ -49,7 +52,7 @@ module Fluent
             begin
         	res = Net::HTTP.get_response(uri)
             rescue Errno::ECONNREFUSED
-        	raise Fluent::ConfigError, "Couldn't connect to ClickHouse at #{ @uri } - connection refused"
+        	    raise Fluent::ConfigError, "Couldn't connect to ClickHouse at #{ @uri } - connection refused"
             end
             if res.code != "200"
                 raise Fluent::ConfigError, "ClickHouse server responded non-200 code: #{ res.body }"
@@ -88,4 +91,5 @@ module Fluent
             end
         end
     end
+  end
 end
