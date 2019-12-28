@@ -33,7 +33,7 @@ Additional fields:
 ```
 
 Before launching td-agent, create table into ClickHouse:  
-`CREATE TABLE FLUENT ( Date Date MATERIALIZED toDate(DateTime),  DateTime DateTime,  Str String,  Num Int32) ENGINE = MergeTree(Date, Date, DateTime, 8192)`  
+`CREATE TABLE FLUENT ( Date Date MATERIALIZED toDate(DateTime),  DateTime DateTime,  Str String,  Num Int32) ENGINE = MergeTree(Date, DateTime, 8192)`  
 Start td-agent and send a few events to fluentd:  
 ```
 curl -X POST -d 'json={"Num":1}' http://localhost:8888/inp
