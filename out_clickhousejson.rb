@@ -30,12 +30,20 @@ module Fluent
         desc "Name of internal fluentd time field (if need to use)"
         config_param :datetime_name, :string, default: nil
         config_section :buffer do
-            config_set_default :@type, "file"
-            config_set_default :chunk_keys, ["time"]
-            config_set_default :flush_at_shutdown, true
-            config_set_default :timekey, DEFAULT_TIMEKEY
+            config_set_default :@type, "memory"
+            config_set_default :flush_mode, :interval
+            config_set_default :flush_interval, 1
+            config_set_default :flush_thread_interval, 0.05
+            config_set_default :flush_thread_burst_interval, 0.05
+            config_set_default :chunk_limit_size, 1 * 1024 ** 2 # 1MB
+            config_set_default :total_limit_size, 1 * 1024 ** 3 # 1GB
+            config_set_default :chunk_limit_records, 500
         end
 
+        def multi_workers_ready?
+            true
+        end
+        
         def configure(conf)
             super
             @uri, @uri_params = make_uri(conf)
